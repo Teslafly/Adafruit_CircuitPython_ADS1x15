@@ -85,6 +85,32 @@ class ADS1x15:
         self.mode = mode
         self.i2c_device = I2CDevice(i2c, address)
 
+    def status(self):
+        """
+        human readable summary of adc.
+        >>> chan.str()
+        ''
+        'AIN3->4()'
+        'AIN0( voltage: 0.0000v, raw_value: 0/4095,)'
+        """
+
+        mode = {Mode.CONTINUOUS: "CONTINUOUS", Mode.SINGLE: "SINGLE"}[self.mode]
+        summary = (
+            f"{type(self).__name__}( "
+            + f"bits: {self.bits}, "
+            + f"data_rate: {self.data_rate}SPS, "
+            + f"gain: {self.gain}, "
+            + f"mode: {mode} )"
+        )
+
+        return summary
+
+    def __repr__(self):
+        return self.status()
+
+    def __str__(self):
+        return self.status()
+
     @property
     def bits(self) -> int:
         """The ADC bit resolution."""

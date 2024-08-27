@@ -47,6 +47,33 @@ class AnalogIn:
             self._pin_setting = _ADS1X15_DIFF_CHANNELS[pins]
             self.is_differential = True
 
+    def status(self):
+        """
+        human readable summary of dac channel
+        >>> chan.str()
+        'AIN0( voltage: 0.0000v, raw_value:     0/65535, is_differential: False )' # single ended
+        'AIN3P->4N (voltage: 0.0000v, raw_value:     0/65535, is_differential: True)' # differential
+        """
+        # ch_name = self._dac._channel_index_map[self.channel_index]
+        if self.is_differential == False:
+            ch_name = self._pin_setting
+        else:
+            ch_name = f"{self._pin_setting}P->{self._negative_pin}N"
+        summary = (
+            f"AIN{ch_name}( "
+            + f"voltage: {self.voltage:.4f}v, "
+            + f"value:{self.value:5}/65535, "
+            + f"is_differential: {self.is_differential} )"
+        )
+
+        return summary
+
+    def __repr__(self):
+        return self.status()
+
+    def __str__(self):
+        return self.status()
+
     @property
     def value(self) -> int:
         """The value on the analog pin between 0 and 65535
